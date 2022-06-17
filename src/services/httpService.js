@@ -1,4 +1,5 @@
 import axios from "axios";
+import config from "../../src/constants/config.json";
 import { toast } from "react-toastify";
 
 axios.interceptors.response.use(null, (error) => {
@@ -12,12 +13,22 @@ axios.interceptors.response.use(null, (error) => {
 	return Promise.reject(error);
 });
 
+const axiosInstance = axios.create({
+	baseURL: config.apiEndpoint,
+	timeout: 5000,
+	headers: {
+		Authorization: "Bearer " + localStorage.getItem("access_token"),
+		"Content-Type": "application/json",
+		accept: "application/json",
+	},
+});
+
 const http = {
-	get: axios.get,
-	post: axios.post,
-	put: axios.put,
-	delete: axios.delete,
-	patch: axios.patch,
+	get: axiosInstance.get,
+	post: axiosInstance.post,
+	put: axiosInstance.put,
+	delete: axiosInstance.delete,
+	patch: axiosInstance.patch,
 };
 
 export default http;

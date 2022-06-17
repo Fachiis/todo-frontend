@@ -1,17 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
-import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import "./index.css";
+import App from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
 	<React.StrictMode>
-		<BrowserRouter>
-			<App />
-		</BrowserRouter>
+		<GoogleOAuthProvider clientId="684524927906-1cnd3vkgovirg5anhgoaq2ron5mdu1d1.apps.googleusercontent.com">
+			<BrowserRouter>
+				<App />
+			</BrowserRouter>
+		</GoogleOAuthProvider>
 	</React.StrictMode>
 );
 

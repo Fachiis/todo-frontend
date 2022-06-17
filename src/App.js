@@ -28,8 +28,8 @@ function App() {
 	};
 
 	const fetchCompletedTasks = async () => {
-		const { data: tasks } = await http.get(`${config.apiEndpoint}completed/`);
-		setTasks(tasks);
+		const completedTasks = tasks.filter((task) => task.completed);
+		setTasks(completedTasks);
 	};
 
 	const fetchTask = async (id) => {
@@ -40,7 +40,6 @@ function App() {
 	const handleAdd = async (task) => {
 		const prevState = tasks;
 		const { status } = await http.post(config.apiEndpoint, task);
-		console.log(status);
 
 		if (status !== 201) {
 			setTasks(prevState);

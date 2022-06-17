@@ -10,6 +10,8 @@ const AddTask = ({ showAdd, onAddTask, onPost, onFetchCompleteTasks }) => {
 	const [reminder, setReminder] = useState(false);
 	const [checked, setChecked] = useState(false);
 
+	const authToken = localStorage.getItem("access_token");
+
 	const {
 		getArrowProps,
 		getTooltipProps,
@@ -54,11 +56,10 @@ const AddTask = ({ showAdd, onAddTask, onPost, onFetchCompleteTasks }) => {
 		setChecked(check);
 
 		if (!check) {
-			window.location = location.pathname;
-			return;
+			window.location = location ? location.pathname : "/";
+		} else {
+			onFetchCompleteTasks();
 		}
-
-		onFetchCompleteTasks();
 	};
 
 	return (
@@ -101,7 +102,7 @@ const AddTask = ({ showAdd, onAddTask, onPost, onFetchCompleteTasks }) => {
 					className={getAddButtonClasses()}
 					onClick={onAddTask}
 				>
-					{showAdd ? <span>&#10006; Close</span> : <span>&#10010; Add</span>}
+					{showAdd ? <span>&#10007; Close</span> : <span>&#10003; Add</span>}
 				</button>
 			</div>
 			{showAdd && (
@@ -155,12 +156,20 @@ const AddTask = ({ showAdd, onAddTask, onPost, onFetchCompleteTasks }) => {
 							/>
 						</label>
 					</div>
-
-					<input
-						type="submit"
-						value="Save Task"
-						className="p-3 px-6 pt-2 cursor-pointer text-white bg-brightRed rounded-md baseline hover:bg-brightRedLight md:block"
-					/>
+					{authToken ? (
+						<input
+							type="submit"
+							value="Save Task"
+							className="p-3 px-6 pt-2 cursor-pointer text-white bg-brightRed rounded-md baseline hover:bg-brightRedLight md:block"
+						/>
+					) : (
+						<input
+							type="submit"
+							disabled={true}
+							value="Login in to continue"
+							className="p-3 px-6 pt-2 cursor-pointer text-white bg-brightRedLight rounded-md baseline md:block"
+						/>
+					)}
 				</form>
 			)}
 		</>
