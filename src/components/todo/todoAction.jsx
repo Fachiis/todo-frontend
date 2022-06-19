@@ -4,22 +4,20 @@ import Tasks from "./tasks";
 
 const TodoAction = ({
 	tasks,
-	showAdd,
-	onAddTask,
 	onDelete,
 	onToggle,
 	onPost,
 	onCheck,
 	onFetchCompleteTasks,
+	onFetchAllTasks,
 }) => {
 	return (
 		<>
 			<div className="md:w-1/2 flex flex-col pb-10 md:pb-20">
 				<AddTask
-					showAdd={showAdd}
-					onAddTask={onAddTask}
 					onPost={onPost}
 					onFetchCompleteTasks={onFetchCompleteTasks}
+					onFetchAllTasks={onFetchAllTasks}
 				/>
 				<Tasks
 					tasks={tasks}

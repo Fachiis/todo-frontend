@@ -12,7 +12,7 @@ const TodoInfo = () => {
 				also help you to get reminders when they are due.
 			</p>
 			<div className="flex justify-center md:justify-start">
-				<button className="hidden p-3 px-6 pt-2 text-white bg-brightRed rounded-md baseline cursor-none hover:bg-brightRedLight md:block">
+				<button className="hidden p-3 px-6 pt-2 text-white bg-brightRed rounded-md baseline cursor-not-allowed md:block">
 					It's free
 				</button>
 			</div>

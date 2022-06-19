@@ -4,13 +4,12 @@ import TodoInfo from "./todo/todoInfo";
 
 const HeroSection = ({
 	tasks,
-	showAdd,
-	onAddTask,
 	onDelete,
 	onToggle,
 	onPost,
 	onCheck,
 	onFetchCompleteTasks,
+	onFetchAllTasks,
 }) => {
 	return (
 		<section id="hero">
@@ -18,13 +17,12 @@ const HeroSection = ({
 				<TodoInfo />
 				<TodoAction
 					tasks={tasks}
-					showAdd={showAdd}
-					onAddTask={onAddTask}
 					onDelete={onDelete}
 					onToggle={onToggle}
 					onCheck={onCheck}
 					onPost={onPost}
 					onFetchCompleteTasks={onFetchCompleteTasks}
+					onFetchAllTasks={onFetchAllTasks}
 				/>
 			</div>
 		</section>

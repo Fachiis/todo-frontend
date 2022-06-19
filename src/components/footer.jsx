@@ -5,8 +5,8 @@ const Footer = () => {
 		<footer className="bg-veryDarkBlue">
 			<div className="container flex flex-col justify-between px-2 py-10 mx-auto">
 				<div className="flex flex-col justify-between">
-					<form className="mb-5">
-						<div className="flex space-x-3">
+					<form className="mb-5 p-5">
+						<div className="flex space-x-3 md:space-x-6">
 							<input
 								type="text"
 								className="flex-1 px-4 rounded-full focus:outline-none"

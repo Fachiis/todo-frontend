@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import Switch from "react-switch";
-import { useLocation } from "react-router-dom";
 import { usePopperTooltip } from "react-popper-tooltip";
 import "react-popper-tooltip/dist/styles.css";
 
-const AddTask = ({ showAdd, onAddTask, onPost, onFetchCompleteTasks }) => {
+const AddTask = ({ onPost, onFetchCompleteTasks, onFetchAllTasks }) => {
 	const [content, setContent] = useState("");
 	const [created_at, setCreatedAt] = useState("");
 	const [reminder, setReminder] = useState(false);
 	const [checked, setChecked] = useState(false);
+	const [showAddTask, setShowAddTask] = useState(false);
 
 	const authToken = localStorage.getItem("access_token");
 
@@ -22,10 +22,14 @@ const AddTask = ({ showAdd, onAddTask, onPost, onFetchCompleteTasks }) => {
 		placement: "top",
 	});
 
+	const onAddTask = () => {
+		setShowAddTask(!showAddTask);
+	};
+
 	const getAddButtonClasses = () => {
 		let classes =
 			"self-end p-2 px-6 pt-2 mb-3 text-white baseline rounded-full hover:bg-brightRedLight ";
-		classes += showAdd
+		classes += showAddTask
 			? "bg-rose-600 hover:bg-rose-400"
 			: "bg-brightRed hover:bg-brightRedLight";
 
@@ -51,12 +55,11 @@ const AddTask = ({ showAdd, onAddTask, onPost, onFetchCompleteTasks }) => {
 		setReminder(false);
 	};
 
-	const location = useLocation();
 	const handleToggleComplete = (check) => {
 		setChecked(check);
 
 		if (!check) {
-			window.location = location ? location.pathname : "/";
+			onFetchAllTasks();
 		} else {
 			onFetchCompleteTasks();
 		}
@@ -65,47 +68,89 @@ const AddTask = ({ showAdd, onAddTask, onPost, onFetchCompleteTasks }) => {
 	return (
 		<>
 			<div className="flex justify-between">
-				<button type="button" ref={setTriggerRef}>
-					<Switch
-						checked={checked}
-						onChange={handleToggleComplete}
-						onColor="#f25f3a"
-						onHandleColor="#f25f3a"
-						handleDiameter={30}
-						uncheckedIcon={false}
-						checkedIcon={false}
-						boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-						activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-						height={20}
-						width={48}
-						className="cursor-pointer mb-3 mt-2"
-						id="material-switch"
-					/>
-				</button>
-				{visible && (
-					<div
-						ref={setTooltipRef}
-						{...getTooltipProps({
-							className: "tooltip-container",
-						})}
-					>
-						<div
-							{...getArrowProps({
-								className: "tooltip-arrow",
-							})}
-						/>
-						task completed
-					</div>
+				{authToken ? (
+					<>
+						<button type="button" ref={setTriggerRef}>
+							<Switch
+								checked={checked}
+								onChange={handleToggleComplete}
+								onColor="#f25f3a"
+								onHandleColor="#f25f3a"
+								handleDiameter={30}
+								uncheckedIcon={false}
+								checkedIcon={false}
+								boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+								activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+								height={20}
+								width={48}
+								className="cursor-pointer mb-2 mt-2"
+								id="material-switch"
+							/>
+						</button>
+
+						{visible && (
+							<div
+								ref={setTooltipRef}
+								{...getTooltipProps({
+									className: "tooltip-container",
+								})}
+							>
+								<div
+									{...getArrowProps({
+										className: "tooltip-arrow",
+									})}
+								/>
+								task completed
+							</div>
+						)}
+					</>
+				) : (
+					<>
+						<button type="button" ref={setTriggerRef}>
+							<Switch
+								onColor="#f25f3a"
+								onHandleColor="#f25f3a"
+								handleDiameter={30}
+								uncheckedIcon={false}
+								checkedIcon={false}
+								boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+								activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+								height={20}
+								width={48}
+								className="cursor-pointer mb-2 mt-2"
+								id="material-switch"
+							/>
+						</button>
+						{visible && (
+							<div
+								ref={setTooltipRef}
+								{...getTooltipProps({
+									className: "tooltip-container",
+								})}
+							>
+								<div
+									{...getArrowProps({
+										className: "tooltip-arrow",
+									})}
+								/>
+								Login to see your completed tasks
+							</div>
+						)}
+					</>
 				)}
 				<button
 					href="login"
 					className={getAddButtonClasses()}
 					onClick={onAddTask}
 				>
-					{showAdd ? <span>&#10007; Close</span> : <span>&#10003; Add</span>}
+					{showAddTask ? (
+						<span>&#10007; Close</span>
+					) : (
+						<span>&#10003; Add</span>
+					)}
 				</button>
 			</div>
-			{showAdd && (
+			{showAddTask && (
 				<form
 					className="flex flex-col px-5 mb-3 space-y-6 my-2 md:w-full"
 					onSubmit={handleSubmit}
@@ -147,7 +192,8 @@ const AddTask = ({ showAdd, onAddTask, onPost, onFetchCompleteTasks }) => {
 							</div>
 							<input
 								className="border rounded-md p-2
-                                        border-slate-300 placeholder-slate-400 contrast-more:border-slate-400 contrast-more:placeholder-slate-500"
+								text-brightRed 
+								focus:ring-red-200"
 								placeholder="Task name"
 								type="checkbox"
 								checked={reminder}

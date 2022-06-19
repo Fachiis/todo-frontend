@@ -71,7 +71,7 @@ const NavBar = () => {
 				) : (
 					<>
 						<form onSubmit={(e) => e.preventDefault()}>
-							<div className="flex justify-center items-center mx-1 mt-2 md:mx-2">
+							<div className="flex justify-center items-center mt-2">
 								<button
 									className="button p-3 px-6 pt-2 text-white bg-brightRed rounded-full baseline hover:bg-brightRedLight md:block"
 									onClick={logout}

@@ -10,7 +10,6 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
 function App() {
-	const [showAddTask, setShowAddTask] = useState(false);
 	const [tasks, setTasks] = useState([]);
 
 	useEffect(() => {
@@ -24,6 +23,7 @@ function App() {
 
 	const fetchTasks = async () => {
 		const { data: tasks } = await http.get(config.apiEndpoint);
+		setTasks(tasks);
 		return tasks;
 	};
 
@@ -41,12 +41,13 @@ function App() {
 		const prevState = tasks;
 		const { status } = await http.post(config.apiEndpoint, task);
 
-		if (status !== 201) {
+		if (status !== 200) {
 			setTasks(prevState);
 			return;
 		}
 
 		setTasks([...tasks, task]);
+		console.log("Task added successfully", task);
 	};
 
 	const handleDelete = async (id) => {
@@ -112,6 +113,7 @@ function App() {
 
 	return (
 		<React.Fragment>
+			<ToastContainer />
 			<NavBar />
 			<Routes>
 				<Route
@@ -123,15 +125,13 @@ function App() {
 							onToggle={handleToggleReminder}
 							onCheck={handleCheckCompleted}
 							onPost={handleAdd}
-							showAdd={showAddTask}
 							onFetchCompleteTasks={fetchCompletedTasks}
-							onAddTask={() => setShowAddTask(!showAddTask)}
+							onFetchAllTasks={fetchTasks}
 						/>
 					}
 				/>
 			</Routes>
 			<Footer />
-			<ToastContainer />
 		</React.Fragment>
 	);
 }
