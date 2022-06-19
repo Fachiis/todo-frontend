@@ -17,7 +17,7 @@ const Task = ({ task, onDelete, onToggleReminder, onCheckCompleted }) => {
 
 	const getReminderClasses = () => {
 		let classes = "";
-		classes += task.reminder ? "border-l-2 px-2 border-brightRed" : "";
+		classes += task.reminder ? "border-l-2 pl-2 border-brightRed" : "";
 		return classes;
 	};
 
@@ -26,14 +26,14 @@ const Task = ({ task, onDelete, onToggleReminder, onCheckCompleted }) => {
 	};
 
 	return (
-		<div className="px-5 my-3 cursor-pointer">
+		<div className="container mx-auto py-2 px-5 m-2 cursor-pointer">
 			<div
 				className={getReminderClasses()}
 				onDoubleClick={() => onToggleReminder(task.id)}
 			>
 				<div className="flex items-center justify-between">
 					<h1>{task.content}</h1>
-					<div className="flex items-center space-x-3">
+					<div className="flex items-center self-end space-x-3">
 						<button type="button" ref={setTriggerRef}>
 							<input
 								type="checkbox"

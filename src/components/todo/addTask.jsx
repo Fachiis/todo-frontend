@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import Switch from "react-switch";
+import Popup from "reactjs-popup";
+import FacebookLogin from "react-facebook-login";
+import facebookLogin from "../../axios/facebookLogin";
+import { useLocation } from "react-router-dom";
 import { usePopperTooltip } from "react-popper-tooltip";
+import "reactjs-popup/dist/index.css";
 import "react-popper-tooltip/dist/styles.css";
 
 const AddTask = ({ onPost, onFetchCompleteTasks, onFetchAllTasks }) => {
@@ -36,6 +41,16 @@ const AddTask = ({ onPost, onFetchCompleteTasks, onFetchAllTasks }) => {
 		return classes;
 	};
 
+	const getAddButtonNoAuthClasses = () => {
+		let classes =
+			"p-2 px-6 pt-2 mb-3 text-white baseline rounded-full hover:bg-brightRedLight ";
+		classes += showAddTask
+			? "bg-rose-600 hover:bg-rose-400"
+			: "bg-brightRed hover:bg-brightRedLight";
+
+		return classes;
+	};
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
 
@@ -63,6 +78,14 @@ const AddTask = ({ onPost, onFetchCompleteTasks, onFetchAllTasks }) => {
 		} else {
 			onFetchCompleteTasks();
 		}
+	};
+
+	const location = useLocation();
+	const responseFacebook = (response) => {
+		facebookLogin(response.accessToken);
+		setTimeout(() => {
+			window.location = location ? location.pathname : "/";
+		}, 3000);
 	};
 
 	return (
@@ -103,52 +126,34 @@ const AddTask = ({ onPost, onFetchCompleteTasks, onFetchAllTasks }) => {
 								task completed
 							</div>
 						)}
+						<button
+							href="login"
+							className={getAddButtonClasses()}
+							onClick={onAddTask}
+						>
+							{showAddTask ? (
+								<span>&#10007; Close</span>
+							) : (
+								<span>&#10003; Add</span>
+							)}
+						</button>
 					</>
 				) : (
 					<>
-						<button type="button" ref={setTriggerRef}>
-							<Switch
-								onColor="#f25f3a"
-								onHandleColor="#f25f3a"
-								handleDiameter={30}
-								uncheckedIcon={false}
-								checkedIcon={false}
-								boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-								activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-								height={20}
-								width={48}
-								className="cursor-pointer mb-2 mt-2"
-								id="material-switch"
-							/>
+						<div></div>
+						<button
+							href="login"
+							className={getAddButtonNoAuthClasses()}
+							onClick={onAddTask}
+						>
+							{showAddTask ? (
+								<span>&#10007; Close</span>
+							) : (
+								<span>&#10003; Add</span>
+							)}
 						</button>
-						{visible && (
-							<div
-								ref={setTooltipRef}
-								{...getTooltipProps({
-									className: "tooltip-container",
-								})}
-							>
-								<div
-									{...getArrowProps({
-										className: "tooltip-arrow",
-									})}
-								/>
-								Login to see your completed tasks
-							</div>
-						)}
 					</>
 				)}
-				<button
-					href="login"
-					className={getAddButtonClasses()}
-					onClick={onAddTask}
-				>
-					{showAddTask ? (
-						<span>&#10007; Close</span>
-					) : (
-						<span>&#10003; Add</span>
-					)}
-				</button>
 			</div>
 			{showAddTask && (
 				<form
@@ -209,12 +214,42 @@ const AddTask = ({ onPost, onFetchCompleteTasks, onFetchAllTasks }) => {
 							className="p-3 px-6 pt-2 cursor-pointer text-white bg-brightRed rounded-md baseline hover:bg-brightRedLight md:block"
 						/>
 					) : (
-						<input
-							type="submit"
-							disabled={true}
-							value="Login in to continue"
-							className="p-3 px-6 pt-2 cursor-pointer text-white bg-brightRedLight rounded-md baseline md:block"
-						/>
+						<Popup
+							trigger={
+								<button className="p-3 px-6 pt-2 cursor-pointer text-white bg-brightRed rounded-md baseline hover:bg-brightRedLight md:block">
+									Login to continue
+								</button>
+							}
+							modal
+							nested
+							className="m-10 md:w-1/2 md:m-2"
+						>
+							{(close) => (
+								<div className="text-lg mb-3">
+									<button
+										className="cursor-pointer absolute block py-2 px-5 -right-10 -top-6 text-base bg-brightRed hover:bg-brightRedLight rounded-full border"
+										onClick={close}
+									>
+										&times;
+									</button>
+									<div className="flex p-5 justify-center items-center text-2xl font-bold text-brightRed">
+										{" "}
+										Login{" "}
+									</div>
+									<form onSubmit={(e) => e.preventDefault()}>
+										<div className="flex justify-center items-center mx-1 mt-2 md:mx-2">
+											<FacebookLogin
+												appId="1245750129567314"
+												fields="name,email,picture"
+												callback={responseFacebook}
+												icon="fa-facebook mr-2"
+												cssClass="bg-sky-600 p-4 rounded-lg"
+											/>
+										</div>
+									</form>
+								</div>
+							)}
+						</Popup>
 					)}
 				</form>
 			)}
